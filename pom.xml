@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>hu.autsoft</groupId>
+    <artifactId>kotlin-android-codegen</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <openapi.version>5.0.0-beta</openapi.version>
+        <kotlin.version>1.3.72</kotlin.version>
+        <retrofit2.version>2.9.0</retrofit2.version>
+        <moshi.version>1.9.3</moshi.version>
+        <okhttp3.version>4.7.2</okhttp3.version>
+    </properties>
+
+    <name>mobile client generator</name>
+
+    <!--<dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-android</artifactId>
+            <version>1.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>retrofit</artifactId>
+            <version>${retrofit2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-moshi</artifactId>
+            <version>${retrofit2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.moshi</groupId>
+            <artifactId>moshi-kotlin-codegen</artifactId>
+            <version>${moshi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.moshi</groupId>
+            <artifactId>moshi</artifactId>
+            <version>${moshi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jakewharton.threetenabp</groupId>
+            <artifactId>threetenabp</artifactId>
+            <version>1.2.3</version>
+            <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>logging-interceptor</artifactId>
+            <version>${okhttp3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.moshi</groupId>
+            <artifactId>moshi-kotlin</artifactId>
+            <version>${moshi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.moshi</groupId>
+            <artifactId>moshi-adapters</artifactId>
+            <version>${moshi.version}</version>
+        </dependency>
+    </dependencies>-->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>C:\Users\LocalAdmin\Desktop\infohub\infohubapi.yaml</inputSpec>
+                            <generatorName>kotlin</generatorName>
+                            <!--
+                            These are the copies of the original template files from
+                            https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator/src/main/resources/kotlin-client
+                            . It's needed because there are several error in the generator and the fast way to fix these is this.
+                            Changes:
+                            - Added MultipartBody import for every api descriptor
+                            - Added `generateSupportingFiles` param to api descriptor import line
+                            -->
+                            <templateDirectory>${project.basedir}/custom-templates</templateDirectory>
+
+                            <ignoreFileOverride>${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
+                            <output>${project.build.directory}/generated-sources/openapi</output>
+                            <generateApis>true</generateApis>
+                            <generateModels>true</generateModels>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+
+                            <apiPackage>hu.spacesalad.secondscr.base.data.network.api</apiPackage>
+                            <modelPackage>hu.spacesalad.secondscr.base.data.network.model</modelPackage>
+
+                            <library>jvm-retrofit2</library>
+                            <additionalProperties>
+                                dateLibrary=java8-localdatetime,useCoroutines=true,enumPropertyNaming=UPPERCASE,serializationLibrary=gson
+                            </additionalProperties>
+
+                            <configOptions>
+                                <collectionType>list</collectionType>
+                                <!--
+                                CONFIG OPTIONS
+
+                                    apiSuffix
+                                        suffix for api classes (Default: Api)
+
+                                    artifactId
+                                        Generated artifact id (name of jar). (Default: kotlin-retrofit)
+
+                                    artifactVersion
+                                        Generated artifact's package version. (Default: 1.0.0)
+
+                                    collectionType
+                                        Option. Collection type to use (Default: list)
+                                            array - kotlin.Array
+                                            list - kotlin.collections.List
+
+                                    dateLibrary
+                                        Option. Date library to use (Default: string)
+                                            threetenbp_local - Threetenbp LocalDateTime
+                                            threetenbp_offset - Threetenbp OffsetDateTime
+                                            string - String
+                                            java8 - Java 8 native JSR310
+                                            threetenbp_zoned - Threetenbp ZonedDateTime
+
+                                    enumPropertyNaming
+                                        Naming convention for enum properties: 'camelCase', 'PascalCase', 'snake_case', 'UPPERCASE', and 'original' (Default: PascalCase)
+
+                                    groupId
+                                        Generated artifact package's organization (i.e. maven groupId). (Default: org.openapitools)
+
+                                    packageName
+                                        Generated artifact package name. (Default: hu.khb.digi.generated)
+
+                                    parcelizeModels
+                                        toggle "@Parcelize" for generated models
+
+                                    sourceFolder
+                                        source folder for generated code (Default: src/main/java)
+                                -->
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>add-gen-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/openapi/src/main/kotlin</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>${contract-artifact-name}-${project.artifactId}-${revision}</finalName>
+                    <attach>false</attach>
+                    <excludes>
+                        <exclude>**/contracts/</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>kapt</id>
+                        <goals>
+                            <goal>kapt</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>
+                                    ${project.build.directory}/generated-sources/openapi/src/main/kotlin
+                                </sourceDir>
+                            </sourceDirs>
+                            <annotationProcessorPaths>
+                                <annotationProcessorPath>
+                                    <groupId>com.squareup.moshi</groupId>
+                                    <artifactId>moshi-kotlin-codegen</artifactId>
+                                    <version>${moshi.version}</version>
+                                </annotationProcessorPath>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            &lt;!&ndash; We should overwrite the default artifact id to prevent packaging error of duplicate files&ndash;&gt;
+                            <moduleName>${contract-artifact-name}</moduleName>
+                            <sourceDirs>
+                                <sourceDir>
+                                    ${project.build.directory}/generated-sources/openapi/src/main/kotlin
+                                </sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>client</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classesDirectory>${project.build.directory}/classes</classesDirectory>
+                            <excludes>
+                                <exclude>**/contracts/</exclude>
+                            </excludes>
+                            <finalName>${contract-artifact-name}-${project.artifactId}-${revision}</finalName>
+                            <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                    <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>2.8.2</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>deploy-file</id>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <file>
+                                ${project.build.directory}/${contract-artifact-name}-${project.artifactId}-${revision}.jar
+                            </file>
+                            <sources>
+                                ${project.build.directory}/${contract-artifact-name}-${project.artifactId}-${revision}-sources.jar
+                            </sources>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${contract-artifact-name}-${project.artifactId}</artifactId>
+                            <version>${revision}</version>
+                            <repositoryId>${repositoryId}</repositoryId>
+                            <generatePom>true</generatePom>
+                            <url>${repositoryURL}</url>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+        </plugins>
+    </build>
+    <pluginRepositories>
+        <!--<pluginRepository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </pluginRepository>-->
+    </pluginRepositories>
+
+</project>
