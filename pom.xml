@@ -14,6 +14,7 @@
         <retrofit2.version>2.9.0</retrofit2.version>
         <moshi.version>1.9.3</moshi.version>
         <okhttp3.version>4.7.2</okhttp3.version>
+		<package.name>hu.bme.aut.jokes</package.name>
     </properties>
 
     <name>mobile client generator</name>
@@ -30,7 +31,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>..\jokes.yaml</inputSpec>
+                            <inputSpec>jokes.yaml</inputSpec>
                             <generatorName>kotlin</generatorName>
                             
                             <output>${project.build.directory}/generated-sources/openapi</output>
@@ -42,8 +43,8 @@
                             <generateModelTests>false</generateModelTests>
                             <generateModelDocumentation>false</generateModelDocumentation>
 
-                            <apiPackage>hu.bme.aut.jokes.data.network.api</apiPackage>
-                            <modelPackage>hu.bme.aut.jokes.data.network.model</modelPackage>
+                            <apiPackage>${package.name}.data.network.api</apiPackage>
+                            <modelPackage>${package.name}.data.network.model</modelPackage>
 
                             <library>jvm-retrofit2</library>
                             <additionalProperties>
